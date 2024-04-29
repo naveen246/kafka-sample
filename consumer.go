@@ -3,9 +3,9 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/google/uuid"
 	"github.com/twmb/franz-go/pkg/kgo"
+	"log/slog"
 )
 
 type Consumer struct {
@@ -41,10 +41,10 @@ func (c *Consumer) PrintMessages() {
 			var msg Message
 			err := json.Unmarshal(record.Value, &msg)
 			if err != nil {
-				fmt.Printf("Error decoding message: %v\n", err)
+				slog.Error("Error decoding message: %v\n", err)
 				continue
 			}
-			fmt.Printf("%s: %s\n", msg.User, msg.Message)
+			slog.Info("%s: %s\n", msg.User, msg.Message)
 		}
 	}
 }

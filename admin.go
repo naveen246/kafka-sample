@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/twmb/franz-go/pkg/kadm"
 	"github.com/twmb/franz-go/pkg/kgo"
+	"log/slog"
 )
 
 type Admin struct {
@@ -38,13 +38,24 @@ func (a *Admin) TopicExists(topic string) bool {
 	return false
 }
 
-func (a *Admin) CreateTopic(topic string) {
+func (a *Admin) CreateTopic(topic string) kadm.CreateTopicResponse {
 	ctx := context.Background()
-	_, err := a.client.CreateTopic(ctx, 3, 3, nil, topic)
+	resp, err := a.client.CreateTopic(ctx, 1, 1, nil, topic)
 	if err != nil {
-		fmt.Printf("Unable to create topic '%s': %s", topic, err)
+		slog.Error("Unable to create topic '%s': %s", topic, err)
 		panic(err)
 	}
+	return resp
+}
+
+func (a *Admin) DeleteTopic(topic string) kadm.DeleteTopicResponse {
+	ctx := context.Background()
+	resp, err := a.client.DeleteTopic(ctx, topic)
+	if err != nil {
+		slog.Error(resp.ErrMessage)
+		return resp
+	}
+	return resp
 }
 
 func (a *Admin) Close() {
