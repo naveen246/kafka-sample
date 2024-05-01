@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"context"
 	"fmt"
 	"os"
 	"strings"
@@ -22,11 +21,6 @@ func main() {
 		admin.CreateTopic(topic)
 	}
 
-	ctx := context.Background()
-	_, err := admin.client.DescribeTopicConfigs(ctx, topic)
-	if err != nil {
-		return
-	}
 	username := ""
 	fmt.Print("Enter your username: ")
 	fmt.Scanln(&username)
